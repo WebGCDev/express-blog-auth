@@ -1,24 +1,33 @@
-//Importazione dei Moduli
 const express = require('express');
+require('dotenv').config();
 const app = express();
-const port = 9015; //Porta Ascolto
-const postRouter = require('./routers/posts'); //router per le rotte dei post
-const posts = require('./db/postsDb.json'); //file JSON contenente i post
+const port = 9015;
+const postRouter = require('./routers/posts');
+const authRouter = require('./routers/auth');
+const requestLogger = require('./middlewares/requestLogger');
+const errorHandler = require('./middlewares/errorHandler');
+const notFoundHandler = require('./middlewares/notFoundHandler');
+const morgan = require('morgan');
 
+app.use(morgan('dev'));
 app.use(express.static('public'));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-//Definizione delle rotte
+app.use(requestLogger);
+
 app.get('/', (req, res) => {
   res.send(
     `<h1>Benvenuto nel mio Blog! Qui potrai trovare tutte le news sulla tua esperienza in cucina!</h1>`
   );
 });
-
-// router per le rotte che iniziano con '/posts'
 app.use('/posts', postRouter);
 
-//Avvio server
+app.use('/auth', authRouter);
+
+app.use(notFoundHandler);
+app.use(errorHandler);
+
 app.listen(port, () => {
-  console.log(`Server http://localhost:${port}`); //messaggio per confermare che il server è in esecuzione
+  console.log(`Server http://localhost:${port}`);
 });

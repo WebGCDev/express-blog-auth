@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "username": "luca.rossini",
+    "password": "oceanView87",
+    "admin": "true"
+  },
+  {
+    "id": 2,
+    "username": "federico.verdielli",
+    "password": "sunsetHills93",
+    "admin": "true"
+  },
+  {
+    "id": 3,
+    "username": "marina.bianconi",
+    "password": "forestTrail22"
+  },
+  {
+    "id": 4,
+    "username": "alessandra.brunetti",
+    "password": "crystalLake58"
+  }
+]

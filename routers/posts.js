@@ -1,20 +1,21 @@
-//Modulo Express
+// routers/posts.js
 const express = require('express');
-//Nuovo router per gestire le route relative ai post
 const router = express.Router();
-//Importiamo il controller dei post
 const postController = require('../Controller/posts');
+const multer = require('multer');
+const { authenticateWithJWT, isAdmin } = require('../Controller/auth');
 
-//chiama la funzione index del controller dei post
+const uploader = multer({ dest: 'public/' });
+
 router.get('/', postController.index);
-//chiama la funzione create del controller dei post
-router.get('/create', postController.create);
-//chiama la funzione show del controller dei post
-router.get('/:slug', postController.show);
-//rotta per scaricare immagine del singolo post
-router.get('/:slug/download', postController.downloadImage);
-//rotta per creare nuovo post
-router.delete('/:slug', postController.destroy);
+router.post(
+  '/',
+  authenticateWithJWT,
+  uploader.single('image'),
+  postController.create
+);
+router.get('/:slug', authenticateWithJWT, postController.show);
+router.get('/:slug/download', postController.download);
+router.delete('/:slug', authenticateWithJWT, isAdmin, postController.destroy);
 
-// esportiamo il router per renderlo disponibile in altre parti dell'app
 module.exports = router;
